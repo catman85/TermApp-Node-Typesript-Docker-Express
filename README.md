@@ -2,6 +2,12 @@
 npm install
 npm run start:dev
 
-## docker
-docker build -t "docker-medium" .
-docker run --rm docker-medium node build/boot.js
+## dev with docker
+# The following command triggers DockerfileDev
+docker-compose up
+
+## docker in production
+docker build -t "docker-app" .
+docker run --rm docker-app node build/boot.js
+
+docker-compose up -> DockerfileDev -> npm run start:dev -> nodemon (looks for changes in src and hot reloads) -> ts-node -> 

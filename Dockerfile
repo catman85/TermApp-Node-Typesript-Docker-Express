@@ -15,10 +15,12 @@ RUN npm ci --quiet && npm run build
 # Production stage.
 # This state compile get back the JavaScript code from builder stage
 # It will also install the production package only
-#
+# we use alpine flavour because it's lightweight
 FROM node:12.13.0-alpine
 
 WORKDIR /app
+
+# now npm install will not install devDependencies
 ENV NODE_ENV=production
 
 COPY package*.json ./
