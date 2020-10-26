@@ -3,7 +3,8 @@ services:
  docker_term_app:
   build: 
    context: .
-   dockerfile: DockerfileDev
+   dockerfile: Dockerfile
+   target: dev
   container_name: term_app
   volumes:
     - ./:/usr/src/app
