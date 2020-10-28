@@ -12,11 +12,11 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@types/node": "^10.12.21",
-    "typescript": "^3.3.1"
+    "@types/node": "^10.12.21"
   },
   "devDependencies": {
     "nodemon": "^2.0.6",
-    "ts-node": "^8.0.2"
+    "ts-node": "^8.0.2",
+    "typescript": "^3.3.1"
   }
 }

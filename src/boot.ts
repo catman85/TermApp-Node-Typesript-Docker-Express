@@ -1,5 +1,5 @@
 function speak(message: string) {
-    console.log(message);
+  console.log(message);
 }
 
 speak('Ready fox! I\'m listening...');
