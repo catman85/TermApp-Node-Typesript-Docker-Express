@@ -6,6 +6,6 @@ var config = {
   headers: {}
 };
 
-export const getDataPromise= function (){
-  return axios(config)
+export const getDataPromise = function () {
+  return axios(config);
 }
