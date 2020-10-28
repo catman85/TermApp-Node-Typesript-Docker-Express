@@ -12,7 +12,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@types/node": "^10.12.21"
+    "@types/node": "^10.12.21",
+    "axios": "^0.21.0"
   },
   "devDependencies": {
     "nodemon": "^2.0.6",
