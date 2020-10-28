@@ -30,7 +30,8 @@
     // From documentation, Specify module code generation
     // commonjs === (target = ES3 OR ES5)
     // Otherwise use es6
-    "module": "es6",
+    // Fixes "The ESM Module Loader is Experimental" Error
+    "module": "commonjs",
 
     // Sourcemap is usefull for the debugging part
     // During dev you should active this one and then disable it in production
