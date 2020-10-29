@@ -8,7 +8,7 @@ import {
 var globeStats: stats.Globe;
 var countryStats: stats.Country;
 
-function fetchData(): Promise < any > {
+function fetchData(): Promise < stats.Country > {
   return new Promise((resolve, reject) => {
     getApiPromise()
       .then(res => {
