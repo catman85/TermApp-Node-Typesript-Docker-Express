@@ -13,7 +13,7 @@
     // If you omit the option it will use
     // For --target ES5: DOM,ES5,ScriptHost
     // For --target ES6: DOM,ES6,DOM.Iterable,ScriptHost
-    "lib": ["es2018", "dom"],
+    "lib": ["es2018"],
 
     // Which ES version you want to target during compilation, this is reliable to the `lib` option
     // This options is really important regarding the project usage too (back or front)
