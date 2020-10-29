@@ -1,3 +1,5 @@
+import { generateError } from './utils'
+
 export namespace stats {
   export var last_update_epoch: number;
 
@@ -29,7 +31,7 @@ export namespace stats {
         this.inCriticalState = api_result.critical;
         this.tests = api_result.tests;
       } catch (err) {
-        throw new Error(err)
+        generateError(err,500)
       }
 
     }
@@ -49,7 +51,7 @@ export namespace stats {
         this.population = api_result.population;
         this.virus = new Virus(api_result)
       } catch (err) {
-        throw new Error(err)
+        generateError(err,500)
       }
     }
   }
