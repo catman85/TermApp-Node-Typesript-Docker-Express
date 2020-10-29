@@ -42,7 +42,13 @@
 
     // Allow to import node module without `import *`
     // Ex import express from 'express'
-    "esModuleInterop": true
+    "esModuleInterop": true,
+
+    // don't produce comments in out directory
+    "removeComments": true,
+
+    // WARNING will not produce js if there are errors in code
+    "noEmitOnError": true
   },
 
   // The folder or files you want to exclude

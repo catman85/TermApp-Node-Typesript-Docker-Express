@@ -4,6 +4,7 @@ import {
 import {
   stats
 } from './statistics'
+import { convertEpochToSeconds } from './utils'
 
 var globeStats: stats.Globe;
 var countryStats: stats.Country;
@@ -13,7 +14,7 @@ function fetchData(): Promise < stats.Country > {
     getApiPromise()
       .then(res => {
         countryStats = new stats.Country(res.data)
-        stats.last_update_epoch = res.data.updated
+        stats.last_update_epoch = convertEpochToSeconds(res.data.updated)
         resolve(countryStats)
       }).catch(err => {
         reject(err)

@@ -6,7 +6,11 @@ interface Cache {
 const hours: number = 3600;
 
 function getCurrentTimestampInSeconds(): number {
-  return (Math.floor(Date.now() / 1000));
+  return convertEpochToSeconds(Date.now())
+}
+
+function convertEpochToSeconds(epoch: number): number {
+    return ((Math.floor(epoch / 1000)));
 }
 
 
@@ -26,6 +30,7 @@ export {
   Cache,
   hours,
   getCurrentTimestampInSeconds,
+  convertEpochToSeconds,
   cacheIsFresh,
   generateError
 }
