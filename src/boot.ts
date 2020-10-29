@@ -1,9 +1,30 @@
 import {
-  getDataPromise
+  getApiPromise
 } from './externalApi'
+import {
+  stats
+} from './statistics'
 
-let sum = 3 + 5
+var globeStats: stats.Globe;
+var countryStats: stats.Country;
 
-getDataPromise().then(res =>
-  console.log(res.status)
+function fetchData(): Promise < any > {
+  return new Promise((resolve, reject) => {
+    getApiPromise()
+      .then(res => {
+        countryStats = new stats.Country(res.data)
+        stats.last_update_epoch = res.data.updated
+        resolve(countryStats)
+      }).catch(err => {
+        reject(err)
+      })
+  })
+}
+
+fetchData().then(res => {
+  return res
+}).then(country => {
+  country.show();
+}).catch(
+  err => console.error(err)
 )
