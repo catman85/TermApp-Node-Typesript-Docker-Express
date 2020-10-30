@@ -6,7 +6,7 @@ services:
   build: 
    context: .
    dockerfile: Dockerfile
-   target: "${TARGET_BUILD}"
+   target: dev
   ports:
     - "${HOST_PORT}:${SERVER_PORT}" 
   container_name: term_app
