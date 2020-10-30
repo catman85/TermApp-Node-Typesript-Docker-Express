@@ -13,19 +13,18 @@ var cache: util.Cache = {
   last_update_epoch: 0
 };
 
-export const getApiPromise = function (): Promise < any > {
-  return new Promise((resolve, reject) => {
-    if (util.cacheIsFresh(cache, cacheRefreshRate)) {
-      resolve(cache)
-      return
-    }
+export const getApiPromise = async (): Promise < any > => {
+  if (util.cacheIsFresh(cache, cacheRefreshRate)) {
+    return Promise.resolve(cache);
+  }
 
-    axios(config)
-      .then(res => {
-        saveInCache(res)
-        resolve(res)
-      }).catch(err => reject(err))
-  })
+  try{
+    let res = await axios(config)
+    saveInCache(res)
+    return Promise.resolve(res);
+  }catch(err){
+    return Promise.reject(err);
+  }
 }
 
 function saveInCache(res): void {
@@ -34,4 +33,3 @@ function saveInCache(res): void {
     last_update_epoch: util.getCurrentTimestampInSeconds()
   }
 }
-

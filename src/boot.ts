@@ -9,21 +9,19 @@ import { convertEpochToSeconds } from './utils'
 var globeStats: stats.Globe;
 var countryStats: stats.Country;
 
-function fetchData(): Promise < stats.Country > {
-  return new Promise((resolve, reject) => {
-    getApiPromise()
-      .then(res => {
-        countryStats = new stats.Country(res.data)
-        stats.last_update_epoch = convertEpochToSeconds(res.data.updated)
-        resolve(countryStats)
-      }).catch(err => {
-        reject(err)
-      })
-  })
+ async function fetchDataCountry(): Promise < stats.Country > {
+  try{
+    let res = await getApiPromise()
+    countryStats = new stats.Country(res.data)
+    stats.last_update_epoch = convertEpochToSeconds(res.data.updated)
+    return Promise.resolve(countryStats);
+  }catch(err){
+    return Promise.reject(err)
+  }
 }
 
-fetchData().then(res => {
-  return res
+fetchDataCountry().then(country => {
+  return country
 }).then(country => {
   country.show();
 }).catch(
