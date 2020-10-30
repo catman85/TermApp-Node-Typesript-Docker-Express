@@ -14,9 +14,9 @@ var countryStats: stats.Country;
     let res = await getApiPromise()
     countryStats = new stats.Country(res.data)
     stats.last_update_epoch = convertEpochToSeconds(res.data.updated)
-    return Promise.resolve(countryStats);
+    return countryStats;
   }catch(err){
-    return Promise.reject(err)
+    return err;
   }
 }
 

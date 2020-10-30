@@ -15,15 +15,15 @@ var cache: util.Cache = {
 
 export const getApiPromise = async (): Promise < any > => {
   if (util.cacheIsFresh(cache, cacheRefreshRate)) {
-    return Promise.resolve(cache);
+    return cache;
   }
 
   try{
     let res = await axios(config)
     saveInCache(res)
-    return Promise.resolve(res);
+    return res;
   }catch(err){
-    return Promise.reject(err);
+    return err;
   }
 }
 
