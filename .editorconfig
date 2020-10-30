@@ -1,0 +1,8 @@
+# I don't talk about it but it's a really powerful tool
+# to keep your codebase settings unified with other developers
+
+[*]
+end_of_line = lf
+indent_style = space
+indent_size = 2
+charset = utf-8

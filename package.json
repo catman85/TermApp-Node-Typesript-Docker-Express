@@ -1,0 +1,23 @@
+{
+  "name": "node_app",
+  "version": "1.0.0",
+  "description": "",
+  "main": "build/boot.js",
+  "scripts": {
+    "start:dev": "nodemon",
+    "build": "tsc",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@types/node": "^10.12.21",
+    "axios": "^0.21.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.6",
+    "ts-node": "^8.0.2",
+    "typescript": "^3.3.1"
+  }
+}
