@@ -7,6 +7,7 @@ WORKDIR /usr/src/app
 COPY package*.json ./
 COPY tsconfig*.json ./
 COPY ./src ./src
+EXPOSE 8080
 RUN npm ci --quiet && npm run build
 
 # Production stage.

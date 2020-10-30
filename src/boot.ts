@@ -1,3 +1,4 @@
+import express from "express";
 import {
   getApiPromise
 } from './externalApi'
@@ -6,6 +7,7 @@ import {
 } from './statistics'
 import { convertEpochToSeconds } from './utils'
 
+const app = express();
 var globeStats: stats.Globe;
 var countryStats: stats.Country;
 
@@ -28,4 +30,12 @@ fetchDataCountry().then(country => {
   err => console.error(err)
 )
 
-console.log(process.env.SERVER_PORT)
+const port: number = +process.env.SERVER_PORT || 8080;
+
+app.get('/', (req, res) => {
+  res.send(countryStats)
+})
+
+app.listen(port, () => {
+  console.log(`Example app listening at http://localhost:${port}`)
+})
