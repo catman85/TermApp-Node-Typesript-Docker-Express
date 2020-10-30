@@ -3,8 +3,8 @@ npm install
 npm run start:dev
 
 ## dev with docker
-# The following command triggers the Dockerfile in the current dir
-# Only reaches the dev stage not the prod.
+### The following command triggers the Dockerfile in the current dir
+### Only reaches the dev stage not the prod.
 docker-compose up
 
 ## docker in production
