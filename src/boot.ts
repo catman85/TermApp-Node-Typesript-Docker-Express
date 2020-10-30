@@ -1,4 +1,5 @@
 import express from "express";
+import requestIp from "request-ip"
 import {
   getApiPromise
 } from './externalApi'
@@ -25,15 +26,16 @@ var countryStats: stats.Country;
 fetchDataCountry().then(country => {
   return country
 }).then(country => {
-  country.show();
+  // country.show();
 }).catch(
   err => console.error(err)
 )
 
 const port: number = +process.env.SERVER_PORT || 8080;
 
+app.use(requestIp.mw())
 app.get('/', (req, res) => {
-  res.send(countryStats)
+  res.send(req.clientIp)
 })
 
 app.listen(port, () => {
