@@ -1,1 +1,0 @@
-# TermApp-Node-Typesript-Docker-Express
