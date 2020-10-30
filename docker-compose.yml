@@ -1,6 +1,8 @@
 version: '3.3'
 services:
  docker_term_app:
+  env_file: 
+    - var.env
   build: 
    context: .
    dockerfile: Dockerfile
