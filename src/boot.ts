@@ -1,43 +1,50 @@
 import express from "express";
 import requestIp from "request-ip"
 import {
-  getApiPromise
+  apiCountryFromIp,
+  apiCovidPromise
 } from './externalApi'
 import {
   stats
 } from './statistics'
-import { convertEpochToSeconds } from './utils'
+import {
+  generateError
+} from './utils'
 
 const app = express();
-var globeStats: stats.Globe;
 var countryStats: stats.Country;
 
- async function fetchDataCountry(): Promise < stats.Country > {
-  try{
-    let res = await getApiPromise()
+async function fetchDataCountry(): Promise < stats.Country > {
+  try {
+    let country = await apiCountryFromIp("::ffff:2.17.124.0");
+    let res = await apiCovidPromise(country)
     countryStats = new stats.Country(res.data)
-    stats.last_update_epoch = convertEpochToSeconds(res.data.updated)
     return countryStats;
-  }catch(err){
-    return err;
+  } catch (err) {
+    console.log("TST")
+    generateError(err, 500, 'External Api Failure');
   }
 }
 
 fetchDataCountry().then(country => {
   return country
-}).then(country => {
-  // country.show();
+}).then(countryS => {
+  countryS.show();
 }).catch(
-  err => console.error(err)
+  err => {
+    console.error(err)
+    console.log("TEST")
+  }
 )
 
 const port: number = +process.env.SERVER_PORT || 8080;
 
 app.use(requestIp.mw())
 app.get('/', (req, res) => {
-  res.send(req.clientIp)
+  let ip = req.clientIp; // Ipv6 Italy example ::ffff:2.17.124.0 
+  res.send(ip)
 })
 
 app.listen(port, () => {
-  console.log(`Example app listening at http://localhost:${port}`)
+  console.log(`listening at http://localhost:${port}`)
 })

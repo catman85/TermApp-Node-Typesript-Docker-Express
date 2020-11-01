@@ -8,6 +8,10 @@ COPY package*.json ./
 COPY tsconfig*.json ./
 COPY ./src ./src
 EXPOSE 8080
+
+# ci stands for clean install
+# it removes node_modules/ and looks in package-lock.json
+# for strict versioning
 RUN npm ci --quiet && npm run build
 
 # Production stage.
