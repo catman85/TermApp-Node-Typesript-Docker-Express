@@ -1,7 +1,8 @@
-import { generateError } from './utils'
+import {
+  generateError
+} from './utils'
 
-export namespace stats {
-  export var last_update_epoch: number;
+export namespace binder {
 
   class Printable {
     show(): void {
@@ -31,7 +32,7 @@ export namespace stats {
         this.inCriticalState = api_result.critical;
         this.tests = api_result.tests;
       } catch (err) {
-        generateError(err,500)
+        generateError(err, 500, 'Tried to get undefined.element')
       }
 
     }
@@ -51,10 +52,9 @@ export namespace stats {
         this.population = api_result.population;
         this.virus = new Virus(api_result)
       } catch (err) {
-        generateError(err,500)
+        generateError(err, 500, 'Tried to get undefined.element')
       }
     }
   }
 
-  export class Globe {}
 }

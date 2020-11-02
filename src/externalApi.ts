@@ -1,35 +1,80 @@
-import * as util from './utils'
-const cacheRefreshRate: number = 3 * util.hours;
+import * as util from './utils';
+import {
+  CacheHandler
+} from './cacheHandler';
+
 var axios = require('axios');
+const cacheHandler: CacheHandler = CacheHandler.getInstance();
 
-var config = {
+type fetchMethod = "get" | "post";
+interface axiosConfig {
+  method: fetchMethod
+  url: string
+  headers: any
+}
+
+var customUrl = {
+  a: 'https://corona.lmao.ninja/v2/countries/',
+  country: 'Greece', //default
+  b: '?yesterday&sort'
+}
+
+var urlWithIp = {
+  fixed: 'http://ip-api.com/json/',
+  ip: '::ffff:2.17.124.0' //Italy example Ipv6
+}
+
+var configGetCountryByIp: axiosConfig = {
   method: 'get',
-  url: 'https://corona.lmao.ninja/v2/countries/Greece?yesterday&sort',
+  url: urlWithIp.fixed + urlWithIp.ip,
   headers: {}
-};
+}
 
-var cache: util.Cache = {
-  data: {},
-  last_update_epoch: 0
-};
+var configGetCovidByCountry: axiosConfig = {
+  method: 'get',
+  url: customUrl.a + customUrl.country + customUrl.b,
+  headers: {}
+}
 
-export const getApiPromise = async (): Promise < any > => {
-  if (util.cacheIsFresh(cache, cacheRefreshRate)) {
-    return cache;
+export const apiCovidPromise = async (country: string): Promise < any > => {
+  if (cacheHandler.isFresh(country)) {
+    return cacheHandler.getContent(country)
   }
+  setCountryAxiosCovidConfig(country);
 
-  try{
-    let res = await axios(config)
-    saveInCache(res)
+  try {
+    let res = await axios(configGetCovidByCountry)
+    cacheHandler.addInCache(country, res)
     return res;
-  }catch(err){
-    return err;
+  } catch (err) {
+    // catching an error and throwing it again
+    util.generateError(err, 500, "External Covid Api Failure")
   }
 }
 
-function saveInCache(res): void {
-  cache = {
-    data: res,
-    last_update_epoch: util.getCurrentTimestampInSeconds()
+export const apiCountryFromIp = async (ip: string): Promise < string > => {
+  try {
+    setIpApiAxiosConfig(ip)
+    let result = await axios(configGetCountryByIp)
+
+    if (result.data.status === 'fail') {
+      console.error("Ip Server result status fail")
+      util.generateError('Invalid ip sent to api', 500)
+    }
+    return result.data.country;
+  } catch (err) {
+    // Error is handled here.
+    // No need to generate a new one
+    return "Greece"; // Default Country
   }
+}
+
+function setCountryAxiosCovidConfig(country: string): void {
+  customUrl.country = country;
+  configGetCovidByCountry.url = customUrl.a + customUrl.country + customUrl.b
+}
+
+function setIpApiAxiosConfig(ip: string): void {
+  urlWithIp.ip = ip;
+  configGetCountryByIp.url = urlWithIp.fixed + urlWithIp.ip;
 }
