@@ -4,8 +4,8 @@ export class CacheHandler {
   private static instance: CacheHandler;
   private static cache: Map < string, Cache > = new Map();
 
-  //private const cacheRefreshRateSeconds: number = 1 * util.hours;
-  private static cacheRefreshRateSeconds: number = 15;
+  // private static cacheRefreshRateSeconds: number = 1 * util.hours;
+  private static cacheRefreshRateSeconds: number = 30 * util.minutes;
 
   public static getInstance(): CacheHandler {
     if (!CacheHandler.instance) {
@@ -24,7 +24,6 @@ export class CacheHandler {
     if (res) {
       return res.data;
     } else {
-      console.log('Cache entry not found')
       return undefined;
     };
   }
@@ -36,13 +35,21 @@ export class CacheHandler {
     }
     let is_recent_cond2: boolean = CacheHandler.cache.get(key).last_update_epoch + CacheHandler.cacheRefreshRateSeconds > util.getCurrentTimestampInSeconds();
     if (!is_recent_cond2) {
+      console.log('Cache entry found for given key, but it\'s old.')
       return false;
     }
     return true;
   }
 
   private exists(key: string): boolean {
-    return this.getContent(key) !== undefined;
+    let condition: boolean
+    condition = this.getContent(key) !== undefined;
+    if (condition) {
+      console.log("Cache Found for given key :)")
+    } else {
+      console.log('Cache entry not found for given key.')
+    }
+    return condition
   }
 
 }

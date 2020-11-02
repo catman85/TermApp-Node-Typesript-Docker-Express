@@ -2,7 +2,7 @@ import {
   generateError
 } from './utils'
 
-export namespace stats {
+export namespace binder {
 
   class Printable {
     show(): void {

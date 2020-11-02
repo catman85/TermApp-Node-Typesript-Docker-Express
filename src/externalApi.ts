@@ -15,17 +15,22 @@ interface axiosConfig {
 
 var customUrl = {
   a: 'https://corona.lmao.ninja/v2/countries/',
-  country: 'Greece',//default
+  country: 'Greece', //default
   b: '?yesterday&sort'
+}
+
+var urlWithIp = {
+  fixed: 'http://ip-api.com/json/',
+  ip: '::ffff:2.17.124.0' //Italy example Ipv6
 }
 
 var configGetCountryByIp: axiosConfig = {
   method: 'get',
-  url: 'http://ip-api.com/json/',
+  url: urlWithIp.fixed + urlWithIp.ip,
   headers: {}
 }
 
-var configGetCovidByCountry: axiosConfig = { 
+var configGetCovidByCountry: axiosConfig = {
   method: 'get',
   url: customUrl.a + customUrl.country + customUrl.b,
   headers: {}
@@ -35,7 +40,6 @@ export const apiCovidPromise = async (country: string): Promise < any > => {
   if (cacheHandler.isFresh(country)) {
     return cacheHandler.getContent(country)
   }
-
   setCountryAxiosCovidConfig(country);
 
   try {
@@ -44,23 +48,33 @@ export const apiCovidPromise = async (country: string): Promise < any > => {
     return res;
   } catch (err) {
     // catching an error and throwing it again
-    util.generateError(err,500,"External Covid Api Failure")
+    util.generateError(err, 500, "External Covid Api Failure")
   }
 }
 
 export const apiCountryFromIp = async (ip: string): Promise < string > => {
-  try{
-    let conf = configGetCountryByIp;
-    conf.url = conf.url + ip;
-    let result = await axios(conf)
+  try {
+    setIpApiAxiosConfig(ip)
+    let result = await axios(configGetCountryByIp)
+
+    if (result.data.status === 'fail') {
+      console.error("Ip Server result status fail")
+      util.generateError('Invalid ip sent to api', 500)
+    }
     return result.data.country;
-  }catch(err){
-    console.error(err)
-    return "Greece";// Default Country
+  } catch (err) {
+    // Error is handled here.
+    // No need to generate a new one
+    return "Greece"; // Default Country
   }
 }
 
-function setCountryAxiosCovidConfig(country: string): void{
+function setCountryAxiosCovidConfig(country: string): void {
   customUrl.country = country;
   configGetCovidByCountry.url = customUrl.a + customUrl.country + customUrl.b
+}
+
+function setIpApiAxiosConfig(ip: string): void {
+  urlWithIp.ip = ip;
+  configGetCountryByIp.url = urlWithIp.fixed + urlWithIp.ip;
 }

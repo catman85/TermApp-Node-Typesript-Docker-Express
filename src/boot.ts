@@ -5,46 +5,42 @@ import {
   apiCovidPromise
 } from './externalApi'
 import {
-  stats
-} from './statistics'
+  binder
+} from './binder'
 import {
   generateError
 } from './utils'
 
 const app = express();
-var countryStats: stats.Country;
+app.use(requestIp.mw())
 
-async function fetchDataCountry(): Promise < stats.Country > {
+const port: number = +process.env.SERVER_PORT || 8080;
+app.listen(port, () => {
+  console.log(`listening at http://localhost:${port}`)
+})
+
+async function fetchDataCountry(country: string): Promise < binder.Country > {
   try {
-    let country = await apiCountryFromIp("::ffff:2.17.124.0");
     let res = await apiCovidPromise(country)
-    countryStats = new stats.Country(res.data)
-    return countryStats;
+    return new binder.Country(res.data)
   } catch (err) {
-    console.log("TST")
+    console.error("Error within fetchDataCountry")
     generateError(err, 500, 'External Api Failure');
   }
 }
 
-fetchDataCountry().then(country => {
-  return country
-}).then(countryS => {
-  countryS.show();
-}).catch(
-  err => {
-    console.error(err)
-    console.log("TEST")
+app.get('/', async (req, res) => {
+  let presendedData: any;
+  try {
+    // Ipv6 Italy example ::ffff:2.17.124.0 
+    let ip = req.clientIp;
+    let country = await apiCountryFromIp("::ffff:2.17.124.0");
+    let countryVirusStats = await fetchDataCountry(country);
+    presendedData = countryVirusStats;
+  } catch (err) {
+    console.error("Something went wrong");
+    presendedData = "INTERNAL SERVER ERROR. Try again Later;"
+  } finally {
+    res.send(presendedData)
   }
-)
-
-const port: number = +process.env.SERVER_PORT || 8080;
-
-app.use(requestIp.mw())
-app.get('/', (req, res) => {
-  let ip = req.clientIp; // Ipv6 Italy example ::ffff:2.17.124.0 
-  res.send(ip)
-})
-
-app.listen(port, () => {
-  console.log(`listening at http://localhost:${port}`)
 })
