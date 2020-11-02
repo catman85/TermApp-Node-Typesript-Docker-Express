@@ -1,6 +1,8 @@
 import express from "express";
 import requestIp from "request-ip"
-import {getFormatedData} from "./presenter"
+import {
+  presentInTerm
+} from "./presenter"
 import {
   apiCountryFromIp,
   apiCovidPromise
@@ -37,8 +39,7 @@ app.get('/', async (req, res) => {
     let ip = req.clientIp;
     let country = await apiCountryFromIp("::ffff:2.17.124.0");
     let countryVirusStats = await fetchDataCountry(country);
-    presendedData = countryVirusStats;
-    presendedData = getFormatedData();
+    presendedData = new presentInTerm.Stats(countryVirusStats).getFormatedData();
   } catch (err) {
     console.error("Something went wrong");
     presendedData = "INTERNAL SERVER ERROR. Try again Later;"
