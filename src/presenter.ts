@@ -11,7 +11,7 @@ export namespace presentInTerm {
   export class Stats {
 
     covidLogo: string =
-    `
+    `${style.color.greenBright.open}
      ▄████▄   ▒█████   ██▒   █▓ ██▓▒█████▄ 
     ▒██▀ ▀█  ▒██▒  ██▒▓██░   █▒▓██▒▒██▀ ██▌
     ▒▓█    ▄ ▒██░  ██▒ ▓██  █▒░▒██▒░██   █▌
@@ -21,7 +21,8 @@ export namespace presentInTerm {
       ░  ▒     ░ ▒ ▒░    ░ ░░   ▒ ░ ░ ▒  ▒ 
     ░        ░ ░ ░ ▒       ░░   ▒ ░ ░ ░  ░ 
     ░ ░          ░ ░        ░   ░     ░    
-    ░                      ░        ░      `;
+    ░                      ░        ░      
+    ${style.color.greenBright.close}`;
 
     countryName: string;
     population: number
@@ -51,13 +52,23 @@ export namespace presentInTerm {
 
     getFormatedData(): string {
       let bigString =
-        `${this.covidLogo}\n` +
-        `\n` +
-        `Showing stats for: ${style.color.whiteBright.open}${style.bgColor.bgBlueBright.open} ${this.countryName} ${style.bgColor.bgBlueBright.close}${style.color.whiteBright.close}...\n` +
-        ` ┌─────────────┐\n` +
-        ` │ Population: │ ${style.color.white.open}${this.population}${style.color.white.close}\n` +
-        ` └─────────────┘` +
-        `\n`;
+        `${this.covidLogo}${style.green.open}\n` +
+        `         Showing status for: ${style.whiteBright.open}${style.bgBlueBright.open} ${this.countryName} ${style.bgBlueBright.close}${style.whiteBright.close}\n` +
+        `${style.green.open}`+
+        `       ┌─────────────────────────────┐\n` +
+        `       │ Population: ${style.color.white.open}${this.population}${style.color.white.close}${style.green.open}\n` +
+        `       └─────────────────────────────┘` +
+        `\n`+
+        `   ┌───────┐     \n`+
+        `  ┌┤ Total ├──── \n`+
+        `  │└───────┘            \n`+
+        `  └───────────────────\n`+
+        `\n`+
+        `   ┌───────┐     \n`+
+        `  ┌┤ Today ├──── \n`+
+        `  │└───────┘            \n`+
+        `  └───────────────────\n`+
+        `${style.green.close}\n`;
       return bigString;
     }
   }
