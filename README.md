@@ -10,7 +10,7 @@
 
 ```sh
 
-curl http://snf-878293.vm.okeanos.grnet.gr/
+curl snf-878293.vm.okeanos.grnet.gr
 
 ```
 
