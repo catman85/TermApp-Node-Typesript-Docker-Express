@@ -11,7 +11,8 @@ import {
   binder
 } from './binder'
 import {
-  generateError
+  generateError,
+  isCommandline
 } from './utils'
 
 const app = express();
@@ -22,35 +23,35 @@ app.listen(port, () => {
   console.log(`listening at http://localhost:${port}`)
 })
 
-app.get('/', async (req, res) => {
-  let presendedData: string;
+type finalResult = string | binder.Country;
+
+app.get('*', async (req, res) => {
+  let presendedData: finalResult;
   try {
     // Ipv6 Italy example ::ffff:2.17.124.0 
     // Geolocating Visitor
-    let ip = req.clientIp;
-    presendedData = (await boot(ip)).toString();
+    const userAgent = req.headers['user-agent'];
+    const ip = req.clientIp;
+    presendedData = await boot(ip, userAgent);
   } catch (err) {
     console.error("Something went wrong");
-    presendedData = "INTERNAL SERVER ERROR. Try again Later;"
+    presendedData = "500 INTERNAL SERVER ERROR. Please Try again Later.\n"
   } finally {
     res.send(presendedData)
   }
 })
 
 // boot("::ffff:2.17.124.0");// for debugging
-async function boot(ip: string): Promise < string > {
-  let country = await apiCountryFromIp(ip);
-  let countryVirusStats = await bindDataCountry(country);
-  let stats: presentInTerm.Stats = new presentInTerm.Stats(countryVirusStats);
-  return stats.getFormatedData();
-}
-
-async function bindDataCountry(country: string): Promise < binder.Country > {
-  try {
-    let res = await apiCovidPromise(country)
-    return new binder.Country(res.data)
-  } catch (err) {
-    console.error("Error within bindDataCountry")
-    generateError(err, 500, 'External Api Failure');
+async function boot(ip: string, userAgent): Promise < finalResult > {
+  const isInTerm: boolean = isCommandline(userAgent);
+  let country: string = await apiCountryFromIp(ip);
+  let resFromApi: any = await apiCovidPromise(country)
+  let countryVirusStats: binder.Country = new binder.Country(resFromApi.data)
+  
+  if (isInTerm) { // curl or wget
+    let stats: presentInTerm.Stats = new presentInTerm.Stats(countryVirusStats);
+    return stats.getFormatedData();
+  } else { // browser
+    return countryVirusStats;
   }
 }

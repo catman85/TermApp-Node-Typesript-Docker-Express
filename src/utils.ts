@@ -18,9 +18,14 @@ function generateError(...args: any[]): never { // never returns
   };
 }
 
+function isCommandline(userAgent): boolean {
+  return userAgent.search(/curl|wget/i) !== -1;
+
+};
 export {
   hours,
   minutes,
+  isCommandline,
   getCurrentTimestampInSeconds,
   convertEpochToSeconds,
   generateError
