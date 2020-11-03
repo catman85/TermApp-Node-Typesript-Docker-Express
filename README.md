@@ -46,7 +46,7 @@ docker-compose up
 
   
 
-##### Execution path:
+##### Execution sequence:
 
 1. docker-compose up
 
@@ -56,9 +56,11 @@ docker-compose up
 
 1. npm run start:dev
 
-1. nodemon (looks for changes in src and hot reloads)
+1. nodemon (when it detects changes->)
 
-1. ts-node -> static analysis and debugging
+1. ts-node 
+
+1. boot.ts
 
  
 ## Docker in production

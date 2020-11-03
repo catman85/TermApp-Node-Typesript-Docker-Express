@@ -35,7 +35,7 @@ app.get('*', async (req, res) => {
     presendedData = await boot(ip, userAgent);
   } catch (err) {
     console.error("Something went wrong");
-    presendedData = "INTERNAL SERVER ERROR. Try again Later;"
+    presendedData = "500 INTERNAL SERVER ERROR. Please Try again Later.\n"
   } finally {
     res.send(presendedData)
   }
@@ -47,7 +47,7 @@ async function boot(ip: string, userAgent): Promise < finalResult > {
   let country: string = await apiCountryFromIp(ip);
   let resFromApi: any = await apiCovidPromise(country)
   let countryVirusStats: binder.Country = new binder.Country(resFromApi.data)
-
+  
   if (isInTerm) { // curl or wget
     let stats: presentInTerm.Stats = new presentInTerm.Stats(countryVirusStats);
     return stats.getFormatedData();
