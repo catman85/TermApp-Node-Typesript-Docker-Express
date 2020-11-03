@@ -2,7 +2,8 @@ import style, {
   BackgroundColor,
   ColorBase,
   CSPair,
-  Modifier
+  Modifier,
+  whiteBright
 } from 'ansi-styles'
 import {
   binder
@@ -36,9 +37,9 @@ export namespace presentInTerm {
     totalRecovered: number
     totalDeaths: number
 
-    todayCases: number
-    todayRecovered: number
-    todayDeaths: number
+    todayCases: number | 'n/a'
+    todayRecovered: number | 'n/a'
+    todayDeaths: number | 'n/a'
 
     constructor(data: binder.Country) {
       try {
@@ -49,9 +50,9 @@ export namespace presentInTerm {
         this.totalDeaths = data.virus.totalDeaths;
         this.totalRecovered = data.virus.recovered;
 
-        this.todayCases = data.virus.todayCases;
-        this.todayRecovered = data.virus.todayRecovered;
-        this.todayDeaths = data.virus.todayDeaths;
+        this.todayCases = data.virus.todayCases != 0 ? data.virus.todayCases : 'n/a';
+        this.todayRecovered = data.virus.todayRecovered != 0 ? data.virus.todayRecovered : 'n/a';
+        this.todayDeaths = data.virus.todayDeaths != 0 ? data.virus.todayDeaths : 'n/a';
       } catch (err) {
         generateError(err, 500, 'Tried to gate porperty of undefined')
       }
@@ -60,11 +61,9 @@ export namespace presentInTerm {
     getFormatedData(): string {
       let bigString =
         `${this.covidLogo}${style.green.open}\n` +
-        `         Showing status for: ${style.whiteBright.open}${style.bgBlueBright.open} ${this.countryName} ${style.bgBlueBright.close}${style.whiteBright.close}\n` +
-        `${style.green.open}` +
+        `         ${this.getCountryNameInColor()}${style.green.open}\n` +
         `       ┌──────────────────────────────┐\n` +
-        `       │ ${style.bold.open}Population${style.bold.close}: ${style.blueBright.open}${this.population}${style.blueBright.close}\n` +
-        `${style.green.open}` +
+        `       │ ${this.getPopulationInColor()}${style.green.open}\n` +
         `       └──────────────────────────────┘` +
         `\n` +
         `   ┌───────┐     \n` +
@@ -98,8 +97,8 @@ export namespace presentInTerm {
     }
 
     private getTodayCasesInColor(): string {
-      return `${style.bgColor.ansi256.rgb(0, 255, 255)}${style.whiteBright.open} Cases: ${style.whiteBright.close}${style.bgColor.close}` +
-        `${style.color.ansi256.rgb(0, 255, 255)} ${this.todayCases} ${style.color.close}`;
+      return `${style.bgColor.ansi256.rgb(66,217,255)}${style.whiteBright.open} Cases: ${style.whiteBright.close}${style.bgColor.close}` +
+        `${style.color.ansi256.rgb(66,217,255)} ${this.todayCases} ${style.color.close}`;
     }
 
     private getTodayRecoveriesInColor(): string {
@@ -110,6 +109,14 @@ export namespace presentInTerm {
     private getTodayDeathsInColor(): string {
       return `${style.bgColor.ansi256.rgb(180, 0, 0)}${style.whiteBright.open} Deaths: ${style.whiteBright.close}${style.bgColor.close}` +
         `${style.color.ansi256.rgb(180, 0, 0)} ${this.todayDeaths} ${style.color.close}`;
+    }
+
+    private getCountryNameInColor(): string {
+      return `Showing status for: ${style.color.whiteBright.open}${style.bgColor.bgBlueBright.open} ${this.countryName} ${style.color.whiteBright.close}${style.bgColor.bgBlueBright.close}`;
+    }
+
+    private getPopulationInColor(): string {
+      return `${style.bold.open}Population${style.bold.close}: ${style.blueBright.open}${this.population}${style.blueBright.close}`;
     }
     // private getInversedColors(bg: CSPair & ColorBase, bgText: string, fg: CSPair, fgText: string): string {
     //   return `${bg}${style.whiteBright.open} ${bgText}: ${style.whiteBright.close}${bg}` +

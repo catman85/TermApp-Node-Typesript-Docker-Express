@@ -8,6 +8,10 @@ export namespace binder {
     show(): void {
       console.log(this)
     };
+
+    toJson(): string {
+      return JSON.stringify(this);
+    }
   }
 
   export class Virus extends Printable {
