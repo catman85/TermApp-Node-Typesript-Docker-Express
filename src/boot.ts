@@ -40,17 +40,17 @@ app.get('/', async (req, res) => {
 // boot("::ffff:2.17.124.0");// for debugging
 async function boot(ip: string): Promise < string > {
   let country = await apiCountryFromIp(ip);
-  let countryVirusStats = await fetchDataCountry(country);
+  let countryVirusStats = await bindDataCountry(country);
   let stats: presentInTerm.Stats = new presentInTerm.Stats(countryVirusStats);
   return stats.getFormatedData();
 }
 
-async function fetchDataCountry(country: string): Promise < binder.Country > {
+async function bindDataCountry(country: string): Promise < binder.Country > {
   try {
     let res = await apiCovidPromise(country)
     return new binder.Country(res.data)
   } catch (err) {
-    console.error("Error within fetchDataCountry")
+    console.error("Error within bindDataCountry")
     generateError(err, 500, 'External Api Failure');
   }
 }
