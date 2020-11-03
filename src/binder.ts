@@ -23,6 +23,7 @@ export namespace binder {
     todayRecovered: number
     inCriticalState: number
     tests: number
+    casesPercentage: string
 
     constructor(api_result: any) {
       super()
@@ -34,6 +35,8 @@ export namespace binder {
         this.recovered = api_result.recovered;
         this.todayRecovered = api_result.todayRecovered;
         this.inCriticalState = api_result.critical;
+        let casesPerMillion = api_result.casesPerOneMillion;
+        this.casesPercentage = ((casesPerMillion*100)/1000000).toFixed(4);
         this.tests = api_result.tests;
       } catch (err) {
         generateError(err, 500, 'Tried to get undefined.element')

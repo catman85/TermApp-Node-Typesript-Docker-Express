@@ -37,6 +37,9 @@ export namespace presentInTerm {
     totalCases: number
     totalRecovered: number
     totalDeaths: number
+    totalTests: number
+    inCriticalState: number
+    casesPercentage: string
 
     todayCases: number | 'n/a'
     todayRecovered: number | 'n/a'
@@ -51,6 +54,9 @@ export namespace presentInTerm {
         this.totalCases = data.virus.totalCases;
         this.totalDeaths = data.virus.totalDeaths;
         this.totalRecovered = data.virus.recovered;
+        this.totalTests = data.virus.tests;
+        this.inCriticalState = data.virus.inCriticalState;
+        this.casesPercentage = data.virus.casesPercentage;
 
         this.todayCases = data.virus.todayCases != 0 ? data.virus.todayCases : 'n/a';
         this.todayRecovered = data.virus.todayRecovered != 0 ? data.virus.todayRecovered : 'n/a';
@@ -63,19 +69,20 @@ export namespace presentInTerm {
     getFormatedData(): string {
       let bigString =
         `${this.covidLogo}${style.green.open}\n` +
-        `         ${this.getCountryNameInColor()} ${style.green.open}\n` +
+        `         ${this.getCountryName()} ${style.green.open}\n` +
         `       ┌──────────────────────────────┐\n` +
-        `       │ ${this.getPopulationInColor()}${style.green.open}\n` +
+        `       │ ${this.getPopulation()}${style.green.open}\n` +
         `       └──────────────────────────────┘\n` +
         `   ┌───────┐     \n` +
         `  ┌┤ ${style.underline.open}Total${style.underline.close} ├─────────────────────────────────────────────────────────┐\n` +
-        `  │└───────┘ ${this.getTotalCasesInColor()} ${this.getTotalRecoveriesInColor()} ${this.getTotalDeathsInColor()}\n` +
-        `${style.green.open}` +
+        `  │└───────┘ ${this.getTotalCases()} ${this.getTotalRecoveries()} ${this.getTotalDeaths()}${style.green.open}\n` +
+        `  │\n`+
+        `  │ ${this.getInCriticalState()} ${this.getTotalTests()} ${this.getCasesPercentage()}\n` +
         `  └──────────────────────────────────────────────────────────────────┘\n` +
         `\n` +
         `   ┌───────┐     \n` +
         `  ┌┤ ${style.underline.open}Today${style.underline.close} ├─────────────────────────────────────────────────────────┐\n` +
-        `  │└───────┘ ${this.getTodayCasesInColor()} ${this.getTodayRecoveriesInColor()} ${this.getTodayDeathsInColor()}\n` +
+        `  │└───────┘ ${this.getTodayCases()} ${this.getTodayRecoveries()} ${this.getTodayDeaths()}\n` +
         `${style.green.open}` +
         `  └──────────────────────────────────────────────────────────────────┘\n` +
         `\n`+
@@ -83,41 +90,56 @@ export namespace presentInTerm {
       return bigString;
     }
 
-    private getTotalCasesInColor(): string {
+    private getTotalCases(): string {
       return `${style.bgYellow.open}${style.whiteBright.open} Cases: ${style.whiteBright.close}${style.bgColor.close}` +
         `${style.yellow.open} ${this.totalCases} ${style.yellow.close}`;
     }
 
-    private getTotalRecoveriesInColor(): string {
+    private getTotalRecoveries(): string {
       return `${style.bgColor.ansi256.rgb(252,111,29)}${style.whiteBright.open} Recoveries: ${style.whiteBright.close}${style.bgColor.close}` +
         `${style.color.ansi256.rgb(252,111,29)} ${this.totalRecovered} ${style.magenta.close}`;
     }
 
-    private getTotalDeathsInColor(): string {
+    private getTotalDeaths(): string {
       return `${style.bgRed.open}${style.whiteBright.open} Deaths: ${style.bgRed.close}${style.whiteBright.close}` +
         `${style.red.open} ${this.totalDeaths} ${style.red.close}`;
     }
 
-    private getTodayCasesInColor(): string {
+    private getTotalTests(): string {
+      return `${style.bgColor.ansi256.hex("4391DF")}${style.whiteBright.open} Tests: ${style.whiteBright.close}${style.bgColor.close}` +
+      `${style.color.ansi256.hex("4391DF")} ${this.totalTests} ${style.color.close}`;
+    }
+
+    private getInCriticalState(): string {
+      return `${style.bgColor.ansi256.hex("89DE28")}${style.whiteBright.open} Critical: ${style.whiteBright.close}${style.bgColor.close}` +
+      `${style.color.ansi256.hex("89DE28")} ${this.inCriticalState} ${style.color.close}`;
+    }
+
+    private getCasesPercentage(): string {
+      return `${style.bgColor.ansi256.hex("7B28DB")}${style.whiteBright.open} Cases/100: ${style.whiteBright.close}${style.bgColor.close}` +
+      `${style.color.ansi256.hex("7B28DB")} ${this.casesPercentage}% ${style.color.close}`;
+    }
+
+    private getTodayCases(): string {
       return `${style.bgColor.ansi256.rgb(66,217,255)}${style.whiteBright.open} Cases: ${style.whiteBright.close}${style.bgColor.close}` +
         `${style.color.ansi256.rgb(66,217,255)} ${this.todayCases} ${style.color.close}`;
     }
 
-    private getTodayRecoveriesInColor(): string {
+    private getTodayRecoveries(): string {
       return `${style.bgColor.ansi256.rgb(255, 0, 255)}${style.whiteBright.open} Recoveries: ${style.whiteBright.close}${style.bgColor.close}` +
         `${style.color.ansi256.rgb(255 , 0, 255)} ${this.todayRecovered} ${style.color.close}`;
     }
 
-    private getTodayDeathsInColor(): string {
+    private getTodayDeaths(): string {
       return `${style.bgColor.ansi256.rgb(180, 0, 0)}${style.whiteBright.open} Deaths: ${style.whiteBright.close}${style.bgColor.close}` +
         `${style.color.ansi256.rgb(180, 0, 0)} ${this.todayDeaths} ${style.color.close}`;
     }
 
-    private getCountryNameInColor(): string {
+    private getCountryName(): string {
       return `Showing status for: │${style.color.whiteBright.open}${style.bgColor.bgBlueBright.open} ${this.countryName} ${style.color.whiteBright.close}${style.bgColor.bgBlueBright.close}│`;
     }
 
-    private getPopulationInColor(): string {
+    private getPopulation(): string {
       return `${style.bold.open}Population${style.bold.close}: ${style.blueBright.open}${this.population}${style.blueBright.close}`;
     }
 
