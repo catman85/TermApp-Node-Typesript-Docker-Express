@@ -13,7 +13,7 @@ export namespace binder {
   export class Virus extends Printable {
     totalCases: number
     todayCases: number
-    deaths: number
+    totalDeaths: number
     todayDeaths: number
     recovered: number
     todayRecovered: number
@@ -25,7 +25,7 @@ export namespace binder {
       try {
         this.totalCases = api_result.cases;
         this.todayCases = api_result.todayCases;
-        this.deaths = api_result.deaths;
+        this.totalDeaths = api_result.deaths;
         this.todayDeaths = api_result.todayDeaths;
         this.recovered = api_result.recovered;
         this.todayRecovered = api_result.todayRecovered;
