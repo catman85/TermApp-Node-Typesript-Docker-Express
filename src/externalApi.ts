@@ -16,7 +16,7 @@ interface axiosConfig {
 var customUrl = {
   a: 'https://corona.lmao.ninja/v2/countries/',
   country: 'Greece', //default
-  b: '?yesterday&sort'
+  b: '?yesterday'
 }
 
 var urlWithIp = {

@@ -46,6 +46,7 @@ export namespace binder {
     countryName: string
     continent: string
     population: number
+    updated: number
     virus: Virus
 
     constructor(api_result: any) {
@@ -54,6 +55,7 @@ export namespace binder {
         this.countryName = api_result.country;
         this.continent = api_result.continent;
         this.population = api_result.population;
+        this.updated = api_result.updated
         this.virus = new Virus(api_result)
       } catch (err) {
         generateError(err, 500, 'Tried to get undefined.element')

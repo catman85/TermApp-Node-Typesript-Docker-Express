@@ -30,8 +30,9 @@ export namespace presentInTerm {
     ░                      ░        ░      
     ${style.color.greenBright.close}`;
 
-    countryName: string;
+    countryName: string
     population: number
+    updated: string
 
     totalCases: number
     totalRecovered: number
@@ -45,6 +46,7 @@ export namespace presentInTerm {
       try {
         this.countryName = data.countryName;
         this.population = data.population;
+        this.updated = new Date(data.updated).toString();
 
         this.totalCases = data.virus.totalCases;
         this.totalDeaths = data.virus.totalDeaths;
@@ -54,18 +56,17 @@ export namespace presentInTerm {
         this.todayRecovered = data.virus.todayRecovered != 0 ? data.virus.todayRecovered : 'n/a';
         this.todayDeaths = data.virus.todayDeaths != 0 ? data.virus.todayDeaths : 'n/a';
       } catch (err) {
-        generateError(err, 500, 'Tried to gate porperty of undefined')
+        generateError(err, 500, 'Tried to get porperty of undefined')
       }
     }
 
     getFormatedData(): string {
       let bigString =
         `${this.covidLogo}${style.green.open}\n` +
-        `         ${this.getCountryNameInColor()}${style.green.open}\n` +
+        `         ${this.getCountryNameInColor()} ${style.green.open}\n` +
         `       ┌──────────────────────────────┐\n` +
         `       │ ${this.getPopulationInColor()}${style.green.open}\n` +
-        `       └──────────────────────────────┘` +
-        `\n` +
+        `       └──────────────────────────────┘\n` +
         `   ┌───────┐     \n` +
         `  ┌┤ ${style.underline.open}Total${style.underline.close} ├─────────────────────────────────────────────────────────┐\n` +
         `  │└───────┘ ${this.getTotalCasesInColor()} ${this.getTotalRecoveriesInColor()} ${this.getTotalDeathsInColor()}\n` +
@@ -77,7 +78,8 @@ export namespace presentInTerm {
         `  │└───────┘ ${this.getTodayCasesInColor()} ${this.getTodayRecoveriesInColor()} ${this.getTodayDeathsInColor()}\n` +
         `${style.green.open}` +
         `  └──────────────────────────────────────────────────────────────────┘\n` +
-        `${style.green.close}\n`;
+        `\n`+
+        `  ${this.getSignature()}${style.green.close}\n`;
       return bigString;
     }
 
@@ -112,11 +114,15 @@ export namespace presentInTerm {
     }
 
     private getCountryNameInColor(): string {
-      return `Showing status for: ${style.color.whiteBright.open}${style.bgColor.bgBlueBright.open} ${this.countryName} ${style.color.whiteBright.close}${style.bgColor.bgBlueBright.close}`;
+      return `Showing status for: │${style.color.whiteBright.open}${style.bgColor.bgBlueBright.open} ${this.countryName} ${style.color.whiteBright.close}${style.bgColor.bgBlueBright.close}│`;
     }
 
     private getPopulationInColor(): string {
       return `${style.bold.open}Population${style.bold.close}: ${style.blueBright.open}${this.population}${style.blueBright.close}`;
+    }
+
+    private getSignature(): string {
+      return `${style.color.magenta.open}Visit: ${style.underline.open}github.com/catman85${style.underline.close} for more${style.color.magenta.close}`
     }
     // private getInversedColors(bg: CSPair & ColorBase, bgText: string, fg: CSPair, fgText: string): string {
     //   return `${bg}${style.whiteBright.open} ${bgText}: ${style.whiteBright.close}${bg}` +
