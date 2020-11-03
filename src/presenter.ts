@@ -77,7 +77,7 @@ export namespace presentInTerm {
         `  ┌┤ ${style.underline.open}Total${style.underline.close} ├─────────────────────────────────────────────────────────┐\n` +
         `  │└───────┘ ${this.getTotalCases()} ${this.getTotalRecoveries()} ${this.getTotalDeaths()}${style.green.open}\n` +
         `  │\n`+
-        `  │ ${this.getInCriticalState()} ${this.getTotalTests()} ${this.getCasesPercentage()}\n` +
+        `  │ ${this.getInCriticalState()} ${this.getTotalTests()} ${this.getCasesPercentage()}${style.green.open}\n` +
         `  └──────────────────────────────────────────────────────────────────┘\n` +
         `\n` +
         `   ┌───────┐     \n` +
