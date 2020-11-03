@@ -25,7 +25,7 @@ export namespace binder {
       try {
         this.totalCases = api_result.cases;
         this.todayCases = api_result.todayCases;
-        this.totalDeaths = api_result.totalDeaths;
+        this.totalDeaths = api_result.deaths;
         this.todayDeaths = api_result.todayDeaths;
         this.recovered = api_result.recovered;
         this.todayRecovered = api_result.todayRecovered;

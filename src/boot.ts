@@ -22,6 +22,29 @@ app.listen(port, () => {
   console.log(`listening at http://localhost:${port}`)
 })
 
+app.get('/', async (req, res) => {
+  let presendedData: string;
+  try {
+    // Ipv6 Italy example ::ffff:2.17.124.0 
+    // Geolocating Visitor
+    let ip = req.clientIp;
+    presendedData = (await boot(ip)).toString();
+  } catch (err) {
+    console.error("Something went wrong");
+    presendedData = "INTERNAL SERVER ERROR. Try again Later;"
+  } finally {
+    res.send(presendedData)
+  }
+})
+
+// boot("::ffff:2.17.124.0");// for debugging
+async function boot(ip: string): Promise < string > {
+  let country = await apiCountryFromIp(ip);
+  let countryVirusStats = await fetchDataCountry(country);
+  let stats: presentInTerm.Stats = new presentInTerm.Stats(countryVirusStats);
+  return stats.getFormatedData();
+}
+
 async function fetchDataCountry(country: string): Promise < binder.Country > {
   try {
     let res = await apiCovidPromise(country)
@@ -31,19 +54,3 @@ async function fetchDataCountry(country: string): Promise < binder.Country > {
     generateError(err, 500, 'External Api Failure');
   }
 }
-
-app.get('/', async (req, res) => {
-  let presendedData: any;
-  try {
-    // Ipv6 Italy example ::ffff:2.17.124.0 
-    let ip = req.clientIp;
-    let country = await apiCountryFromIp("::ffff:2.17.124.0");
-    let countryVirusStats = await fetchDataCountry(country);
-    presendedData = new presentInTerm.Stats(countryVirusStats).getFormatedData();
-  } catch (err) {
-    console.error("Something went wrong");
-    presendedData = "INTERNAL SERVER ERROR. Try again Later;"
-  } finally {
-    res.send(presendedData)
-  }
-})
