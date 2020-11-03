@@ -21,7 +21,7 @@ const port: number = +process.env.SERVER_PORT || 8080;
 app.listen(port, () => {
   console.log(`listening at http://localhost:${port}`)
 })
-
+// TODO: show something to brousers
 app.get('/', async (req, res) => {
   let presendedData: string;
   try {

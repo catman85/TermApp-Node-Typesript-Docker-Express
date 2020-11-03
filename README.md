@@ -1,3 +1,4 @@
+// TODO: images, screenshots badges
 # A web-based terminal app for showing covid-19 status
 ### Made with ❤️:
 - NodeJS
@@ -7,7 +8,7 @@
 
 ## Try it out
 ```sh
-curl http://snf-878293.vm.okeanos.grnet.gr:1234/
+curl http://snf-878293.vm.okeanos.grnet.gr/
 ```
 #### The visitor is geolocated and data is shown for his country.
 
@@ -23,7 +24,7 @@ npm run start:dev
 docker-compose up
 ```
 
-## Execution path:
+##### Execution path:
 1. docker-compose up
 1. Dockerfile 
 1. npm ci --quiet && npm run build
