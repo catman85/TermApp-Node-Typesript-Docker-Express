@@ -90,9 +90,17 @@ export namespace presentInTerm {
       return bigString;
     }
 
+    private getCountryName(): string {
+      return `Showing status for ${style.color.whiteBright.open}${style.bgColor.bgBlueBright.open} ${this.countryName} ${style.color.whiteBright.close}${style.bgColor.bgBlueBright.close}...`;
+    }
+
+    private getPopulation(): string {
+      return `${style.bold.open}Population: ${style.blueBright.open}${this.population}${style.blueBright.close}${style.bold.close}`;
+    }
+
     private getTotalCases(): string {
-      return `${style.bgYellow.open}${style.whiteBright.open} Cases: ${style.whiteBright.close}${style.bgColor.close}` +
-        `${style.yellow.open} ${this.totalCases} ${style.yellow.close}`;
+      return `${style.bgColor.ansi.hex("FF3B3B")}${style.whiteBright.open} Cases: ${style.color.close}${style.bgColor.close}` +
+        `${style.color.ansi.hex("FF3B3B")} ${this.totalCases} ${style.color.close}`;
     }
 
     private getTotalRecoveries(): string {
@@ -101,18 +109,18 @@ export namespace presentInTerm {
     }
 
     private getTotalDeaths(): string {
-      return `${style.bgRed.open}${style.whiteBright.open} Deaths: ${style.bgRed.close}${style.whiteBright.close}` +
-        `${style.red.open} ${this.totalDeaths} ${style.red.close}`;
+      return `${style.bgWhite.open}${style.black.open} Deaths: ${style.whiteBright.close}${style.bgColor.close}` +
+        `${style.color.white.open} ${this.totalDeaths} ${style.color.close}`;
     }
 
     private getTotalTests(): string {
-      return `${style.bgColor.ansi256.hex("4391DF")}${style.whiteBright.open} Tests: ${style.whiteBright.close}${style.bgColor.close}` +
-      `${style.color.ansi256.hex("4391DF")} ${this.totalTests} ${style.color.close}`;
+      return `${style.bgColor.ansi.hex("04BF9D")}${style.whiteBright.open} Tests: ${style.whiteBright.close}${style.bgColor.close}` +
+      `${style.color.ansi.hex("04BF9D")} ${this.totalTests} ${style.color.close}`;
     }
 
     private getInCriticalState(): string {
-      return `${style.bgColor.ansi256.hex("89DE28")}${style.whiteBright.open} Critical: ${style.whiteBright.close}${style.bgColor.close}` +
-      `${style.color.ansi256.hex("89DE28")} ${this.inCriticalState} ${style.color.close}`;
+      return `${style.bgColor.ansi.hex("53C338")}${style.whiteBright.open} Critical: ${style.whiteBright.close}${style.bgColor.close}` +
+      `${style.color.ansi.hex("53C338")} ${this.inCriticalState} ${style.color.close}`;
     }
 
     private getCasesPercentage(): string {
@@ -131,16 +139,8 @@ export namespace presentInTerm {
     }
 
     private getTodayDeaths(): string {
-      return `${style.bgColor.ansi256.rgb(180, 0, 0)}${style.whiteBright.open} Deaths: ${style.whiteBright.close}${style.bgColor.close}` +
-        `${style.color.ansi256.rgb(180, 0, 0)} ${this.todayDeaths} ${style.color.close}`;
-    }
-
-    private getCountryName(): string {
-      return `Showing status for: │${style.color.whiteBright.open}${style.bgColor.bgBlueBright.open} ${this.countryName} ${style.color.whiteBright.close}${style.bgColor.bgBlueBright.close}│`;
-    }
-
-    private getPopulation(): string {
-      return `${style.bold.open}Population${style.bold.close}: ${style.blueBright.open}${this.population}${style.blueBright.close}`;
+      return `${style.bgColor.ansi.hex("990000")}${style.whiteBright.open} Deaths: ${style.whiteBright.close}${style.bgColor.close}` +
+        `${style.color.ansi.hex("990000")} ${this.todayDeaths} ${style.color.close}`;
     }
 
     private getSignature(): string {
