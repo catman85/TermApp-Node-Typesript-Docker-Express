@@ -96,8 +96,8 @@ export namespace presentInTerm {
     }
 
     private getTotalRecoveries(): string {
-      return `${style.bgColor.ansi256.rgb(252,111,29)}${style.whiteBright.open} Recoveries: ${style.whiteBright.close}${style.bgColor.close}` +
-        `${style.color.ansi256.rgb(252,111,29)} ${this.totalRecovered} ${style.magenta.close}`;
+      return `${style.bgColor.ansi256.hex("89DE28")}${style.whiteBright.open} Recoveries: ${style.whiteBright.close}${style.bgColor.close}` +
+        `${style.color.ansi256.hex("89DE28")} ${this.totalRecovered} ${style.magenta.close}`;
     }
 
     private getTotalDeaths(): string {
@@ -111,8 +111,8 @@ export namespace presentInTerm {
     }
 
     private getInCriticalState(): string {
-      return `${style.bgColor.ansi256.hex("89DE28")}${style.whiteBright.open} Critical: ${style.whiteBright.close}${style.bgColor.close}` +
-      `${style.color.ansi256.hex("89DE28")} ${this.inCriticalState} ${style.color.close}`;
+      return `${style.bgColor.ansi256.rgb(252,111,29)}${style.whiteBright.open} Critical: ${style.whiteBright.close}${style.bgColor.close}` +
+      `${style.color.ansi256.rgb(252,111,29)} ${this.inCriticalState} ${style.color.close}`;
     }
 
     private getCasesPercentage(): string {
@@ -121,8 +121,8 @@ export namespace presentInTerm {
     }
 
     private getTodayCases(): string {
-      return `${style.bgColor.ansi256.rgb(66,217,255)}${style.whiteBright.open} Cases: ${style.whiteBright.close}${style.bgColor.close}` +
-        `${style.color.ansi256.rgb(66,217,255)} ${this.todayCases} ${style.color.close}`;
+      return `${style.bgYellow.open}${style.whiteBright.open} Cases: ${style.whiteBright.close}${style.bgColor.close}` +
+        `${style.yellow.open} ${this.todayCases} ${style.color.close}`;
     }
 
     private getTodayRecoveries(): string {
