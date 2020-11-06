@@ -4,8 +4,7 @@
 [![GitHub stars](https://img.shields.io/github/stars/catman85/TermApp-Node-Typesript-Docker-Express?style=for-the-badge)](https://github.com/catman85/TermApp-Node-Typesript-Docker-Express/stargazers) [![GitHub forks](https://img.shields.io/github/forks/catman85/TermApp-Node-Typesript-Docker-Express?style=for-the-badge)](https://github.com/catman85/TermApp-Node-Typesript-Docker-Express/network) 
 ![ ](https://i.imgur.com/OxklHiU.png)
 
-# 💉 It's sick  😷 [![HitCount](http://hits.dwyl.com/catman85/TermApp-Node-Typesript-Docker-Express.svg)](http://hits.dwyl.com/catman85/TermApp-Node-Typesript-Docker-Express) 
-
+# 💉 It's sick 😷 Featured in [![Awesome](https://cdn.rawgit.com/sindresorhus/awesome/d7305f38d29fed78fa85652e3a63e154dd8e8829/media/badge.svg)](https://github.com/chubin/awesome-console-services)
 # Try it out 😎
 
 ```sh
