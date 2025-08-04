@@ -1,19 +1,13 @@
 import express from "express";
 import requestIp from "request-ip"
-import {
-  presentInTerm
-} from "./presenter"
-import {
-  apiCountryFromIp,
-  apiCovidPromise
-} from './externalApi'
-import {
-  binder
-} from './binder'
-import {
-  isCommandline
-} from './utils'
+import dotenv from 'dotenv';
+import {presentInTerm} from "./presenter"
+import {countryFromIpPromise, countryStatisticsPromise} from './externalApi'
+import {dto} from './dto'
+import {getCurrentDate, isCommandline} from './utils'
+import {CountryDailyStatistics, FinalResult} from "./types";
 
+dotenv.config({path: './.env'})
 
 const app = express();
 app.use(requestIp.mw())
@@ -23,12 +17,9 @@ app.listen(port, () => {
   console.log(`listening at http://localhost:${port}`)
 })
 
-type finalResult = string | binder.Country;
-
 app.get('*', async (req, res) => {
-  let presendedData: finalResult;
+  let presendedData: FinalResult;
   try {
-    // Ipv6 Italy example ::ffff:2.17.124.0 
     // Geolocating Visitor
     const userAgent = req.headers['user-agent'];
     const ip = req.clientIp;
@@ -41,17 +32,18 @@ app.get('*', async (req, res) => {
   }
 })
 
-// boot("::ffff:2.17.124.0");// for debugging
-async function boot(ip: string, userAgent): Promise<finalResult> {
+async function boot(ip: string, userAgent: string): Promise<FinalResult> {
   const isInTerm: boolean = isCommandline(userAgent);
-  const country: string = await apiCountryFromIp(ip);
-  const covidApiResponse: any = await apiCovidPromise(country)
-  let countryVirusStats: binder.Country = new binder.Country(covidApiResponse.data)
+  const countryName: string = await countryFromIpPromise(ip);
+  const today = getCurrentDate();
+  const countryDailyCases: CountryDailyStatistics = await countryStatisticsPromise(countryName, today, 'cases');
+  const countryDailyDeaths: CountryDailyStatistics = await countryStatisticsPromise(countryName, today, 'deaths');
+  const virusStatsForGivenCountryEndDate: dto.VirusStatsForGivenCountryEndDate = new dto.VirusStatsForGivenCountryEndDate(countryDailyCases, countryDailyDeaths)
 
   if (isInTerm) { // curl or wget
-    let stats: presentInTerm.Stats = new presentInTerm.Stats(countryVirusStats);
+    const stats: presentInTerm.Stats = new presentInTerm.Stats(virusStatsForGivenCountryEndDate, countryName, today);
     return stats.getFormatedData();
   } else { // browser
-    return countryVirusStats;
+    return virusStatsForGivenCountryEndDate.toJson();
   }
 }

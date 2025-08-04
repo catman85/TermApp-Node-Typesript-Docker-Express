@@ -1,65 +1,48 @@
 import * as util from './utils';
+import {generateError, getCountryByIpAxiosConfig, getCovidApiAxiosConfig, getLatestCountryStatistics} from './utils';
+import {CacheHandler} from './cacheHandler';
 import {
-  CacheHandler
-} from './cacheHandler';
+  AxiosResponse,
+  CountryDailyStatistics,
+  Covid19ApiRequestSelection,
+  Covid19ApiResponse,
+  IpApiResponse
+} from "./types";
 
 const axios = require('axios');
 const cacheHandler: CacheHandler = CacheHandler.getInstance();
 
-type fetchMethod = "get" | "post";
-interface axiosConfig {
-  method: fetchMethod
-  url: string
-  headers: any
-}
 
-const customUrl = {
-  a: 'https://corona.lmao.ninja/v2/countries/',
-  country: 'Greece', //default
-  b: '?yesterday'
-}
-
-const urlWithIp = {
-  fixed: 'http://ip-api.com/json/',
-  ip: '::ffff:2.17.124.0' //Italy example Ipv6
-}
-
-const configGetCountryByIp: axiosConfig = {
-  method: 'get',
-  url: urlWithIp.fixed + urlWithIp.ip,
-  headers: {}
-}
-
-const configGetCovidByCountry: axiosConfig = {
-  method: 'get',
-  url: customUrl.a + customUrl.country + customUrl.b,
-  headers: {}
-}
-
-export const apiCovidPromise = async (country: string): Promise < any > => {
+export const countryStatisticsPromise = async (country: string, dateToCheck: string, type: Covid19ApiRequestSelection): Promise<CountryDailyStatistics> => {
   if (cacheHandler.isFresh(country)) {
     return cacheHandler.getContent(country)
   }
-  setCountryAxiosCovidConfig(country);
 
   try {
-    let res = await axios(configGetCovidByCountry)
-    cacheHandler.addInCache(country, res)
-    return res;
+    const axiosConfig = getCovidApiAxiosConfig(country, type);
+    const res: AxiosResponse<Covid19ApiResponse> = await axios(axiosConfig)
+    if (!res) generateError(500, 'fail');
+
+    const countryStats = type === 'cases' ? res.data[0].cases : res.data[0].deaths
+    const countrySpecificStatistics: CountryDailyStatistics = getLatestCountryStatistics(countryStats, dateToCheck);
+    if (!countrySpecificStatistics) generateError(500, 'country not found');
+
+    const cacheKey = country + dateToCheck + type
+    cacheHandler.addInCache(cacheKey, countrySpecificStatistics)
+    return countrySpecificStatistics;
   } catch (err) {
     // catching an error and throwing it again
-    util.generateError( 500, "External Covid Api Failure",err)
+    util.generateError(500, "External Covid Api Failure", err)
   }
 }
 
-export const apiCountryFromIp = async (ip: string): Promise < string > => {
+export const countryFromIpPromise = async (ipv6: string): Promise<string> => {
   try {
-    setIpApiAxiosConfig(ip)
-    let result = await axios(configGetCountryByIp)
+    const result: AxiosResponse<IpApiResponse> = await axios(getCountryByIpAxiosConfig(ipv6))
 
     if (result.data.status === 'fail') {
       console.error("Ip Server result status fail")
-      util.generateError(500,'Invalid ip sent to api')
+      util.generateError(500, 'Invalid ip sent to api')
     }
     return result.data.country;
   } catch (err) {
@@ -69,12 +52,3 @@ export const apiCountryFromIp = async (ip: string): Promise < string > => {
   }
 }
 
-function setCountryAxiosCovidConfig(country: string): void {
-  customUrl.country = country;
-  configGetCovidByCountry.url = customUrl.a + customUrl.country + customUrl.b
-}
-
-function setIpApiAxiosConfig(ip: string): void {
-  urlWithIp.ip = ip;
-  configGetCountryByIp.url = urlWithIp.fixed + urlWithIp.ip;
-}

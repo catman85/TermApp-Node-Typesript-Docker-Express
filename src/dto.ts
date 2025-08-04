@@ -1,8 +1,7 @@
-import {
-  generateError
-} from './utils'
+import {generateError} from './utils'
+import {CountryDailyStatistics} from "./types";
 
-export namespace binder {
+export namespace dto {
 
   class Printable {
     show(): void {
@@ -45,24 +44,18 @@ export namespace binder {
     }
   }
 
-  export class Country extends Printable {
-    countryName: string
-    continent: string
-    population: number
-    updated: number
-    virus: Virus
+  export class VirusStatsForGivenCountryEndDate extends Printable {
+    casesTotal: number
+    casesNew: number
+    deathsTotal: number
+    deathsNew: number
 
-    constructor(api_result: any) {
+    constructor(countryDailyCases: CountryDailyStatistics, countryDailyDeaths: CountryDailyStatistics) {
       super()
-      try {
-        this.countryName = api_result.country;
-        this.continent = api_result.continent;
-        this.population = api_result.population;
-        this.updated = api_result.updated
-        this.virus = new Virus(api_result)
-      } catch (err) {
-        generateError(500, 'Tried to get undefined.element', err)
-      }
+      this.casesTotal = countryDailyCases.total;
+      this.casesNew = countryDailyCases.new;
+      this.deathsTotal = countryDailyDeaths.total;
+      this.deathsNew = countryDailyDeaths.new
     }
   }
 

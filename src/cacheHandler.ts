@@ -4,7 +4,7 @@ export class CacheHandler {
   private static instance: CacheHandler;
   private static cache: Map<string, Cache> = new Map();
 
-  private static cacheRefreshRateSeconds: number = 30 * util.minuteInSecs;
+  private static cacheRefreshRateSeconds: number = 30 * util.MINUTES_IN_SECS;
 
   private constructor() {
   } // Singleton Pattern
