@@ -1,10 +1,4 @@
-import style, {
-  BackgroundColor,
-  ColorBase,
-  CSPair,
-  Modifier,
-  whiteBright
-} from 'ansi-styles'
+import style from 'ansi-styles'
 import {
   binder
 } from './binder'
@@ -62,13 +56,12 @@ export namespace presentInTerm {
         this.todayRecovered = data.virus.todayRecovered != 0 ? data.virus.todayRecovered : 'n/a';
         this.todayDeaths = data.virus.todayDeaths != 0 ? data.virus.todayDeaths : 'n/a';
       } catch (err) {
-        generateError(err, 500, 'Tried to get porperty of undefined')
+        generateError(500, 'Tried to get porperty of undefined', err)
       }
     }
 
     getFormatedData(): string {
-      let bigString =
-        `${this.covidLogo}${style.green.open}\n` +
+      return `${this.covidLogo}${style.green.open}\n` +
         `         ${this.getCountryName()} ${style.green.open}\n` +
         `       ┌──────────────────────────────┐\n` +
         `       │ ${this.getPopulation()}${style.green.open}\n` +
@@ -76,7 +69,7 @@ export namespace presentInTerm {
         `   ┌───────┐     \n` +
         `  ┌┤ ${style.underline.open}Total${style.underline.close} ├─────────────────────────────────────────────────────────┐\n` +
         `  │└───────┘ ${this.getTotalCases()} ${this.getTotalRecoveries()} ${this.getTotalDeaths()}${style.green.open}\n` +
-        `  │\n`+
+        `  │\n` +
         `  │ ${this.getInCriticalState()} ${this.getTotalTests()} ${this.getCasesPercentage()}${style.green.open}\n` +
         `  └──────────────────────────────────────────────────────────────────┘\n` +
         `\n` +
@@ -85,9 +78,8 @@ export namespace presentInTerm {
         `  │└───────┘ ${this.getTodayCases()} ${this.getTodayRecoveries()} ${this.getTodayDeaths()}\n` +
         `${style.green.open}` +
         `  └──────────────────────────────────────────────────────────────────┘\n` +
-        `\n`+
+        `\n` +
         `  ${this.getSignature()}${style.green.close}\n`;
-      return bigString;
     }
 
     private getCountryName(): string {
@@ -104,8 +96,8 @@ export namespace presentInTerm {
     }
 
     private getTotalRecoveries(): string {
-      return `${style.bgColor.ansi256.rgb(252,111,29)}${style.whiteBright.open} Recoveries: ${style.whiteBright.close}${style.bgColor.close}` +
-        `${style.color.ansi256.rgb(252,111,29)} ${this.totalRecovered} ${style.magenta.close}`;
+      return `${style.bgColor.ansi256.rgb(252, 111, 29)}${style.whiteBright.open} Recoveries: ${style.whiteBright.close}${style.bgColor.close}` +
+        `${style.color.ansi256.rgb(252, 111, 29)} ${this.totalRecovered} ${style.magenta.close}`;
     }
 
     private getTotalDeaths(): string {
@@ -115,27 +107,27 @@ export namespace presentInTerm {
 
     private getTotalTests(): string {
       return `${style.bgColor.ansi.hex("04BF9D")}${style.whiteBright.open} Tests: ${style.whiteBright.close}${style.bgColor.close}` +
-      `${style.color.ansi.hex("04BF9D")} ${this.totalTests} ${style.color.close}`;
+        `${style.color.ansi.hex("04BF9D")} ${this.totalTests} ${style.color.close}`;
     }
 
     private getInCriticalState(): string {
       return `${style.bgColor.ansi.hex("53C338")}${style.whiteBright.open} Critical: ${style.whiteBright.close}${style.bgColor.close}` +
-      `${style.color.ansi.hex("53C338")} ${this.inCriticalState} ${style.color.close}`;
+        `${style.color.ansi.hex("53C338")} ${this.inCriticalState} ${style.color.close}`;
     }
 
     private getCasesPercentage(): string {
       return `${style.bgColor.ansi256.hex("7B28DB")}${style.whiteBright.open} Cases/100: ${style.whiteBright.close}${style.bgColor.close}` +
-      `${style.color.ansi256.hex("7B28DB")} ${this.casesPercentage}% ${style.color.close}`;
+        `${style.color.ansi256.hex("7B28DB")} ${this.casesPercentage}% ${style.color.close}`;
     }
 
     private getTodayCases(): string {
-      return `${style.bgColor.ansi256.rgb(66,217,255)}${style.whiteBright.open} Cases: ${style.whiteBright.close}${style.bgColor.close}` +
-        `${style.color.ansi256.rgb(66,217,255)} ${this.todayCases} ${style.color.close}`;
+      return `${style.bgColor.ansi256.rgb(66, 217, 255)}${style.whiteBright.open} Cases: ${style.whiteBright.close}${style.bgColor.close}` +
+        `${style.color.ansi256.rgb(66, 217, 255)} ${this.todayCases} ${style.color.close}`;
     }
 
     private getTodayRecoveries(): string {
       return `${style.bgColor.ansi256.rgb(255, 0, 255)}${style.whiteBright.open} Recoveries: ${style.whiteBright.close}${style.bgColor.close}` +
-        `${style.color.ansi256.rgb(255 , 0, 255)} ${this.todayRecovered} ${style.color.close}`;
+        `${style.color.ansi256.rgb(255, 0, 255)} ${this.todayRecovered} ${style.color.close}`;
     }
 
     private getTodayDeaths(): string {
@@ -146,6 +138,7 @@ export namespace presentInTerm {
     private getSignature(): string {
       return `${style.color.magenta.open}Visit: ${style.underline.open}github.com/catman85${style.underline.close} for more${style.color.magenta.close}`
     }
+
     // private getInversedColors(bg: CSPair & ColorBase, bgText: string, fg: CSPair, fgText: string): string {
     //   return `${bg}${style.whiteBright.open} ${bgText}: ${style.whiteBright.close}${bg}` +
     //     `${fg} ${fgText} ${fg}`;

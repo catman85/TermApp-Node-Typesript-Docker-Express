@@ -1,32 +1,38 @@
-const hours: number = 3600;
-const minutes: number = 60;
+import dayjs from "dayjs";
+
+const hourInSecs: number = 3600;
+const minuteInSecs: number = 60;
 
 function getCurrentTimestampInSeconds(): number {
-  return convertEpochToSeconds(Date.now())
+  return dayjs().unix()
 }
 
-function convertEpochToSeconds(epoch: number): number {
-  return ((Math.floor(epoch / 1000)));
-}
 // err: any, code: number, message: string
-function generateError(...args: any[]): never { // never returns
+function generateError(code: number, message: string, err?: any,): never { // never returns
   // ALL the catches of the upper layers will be triggered
   // But only the message of the last layer will be printed
+  const errorMessage = message + ' ' + err.toString();
+  console.error(errorMessage)
   throw {
-    message: args[2] + ' ' + args[0],
-    errorCode: args[1]
+    message: errorMessage,
+    errorCode: code
   };
 }
 
-function isCommandline(userAgent): boolean {
-  return userAgent.search(/curl|wget/i) !== -1;
+// Returns current date in YYYY-MM-DD format
+function getCurrentDate(): string {
+  return dayjs().format('YYYY-MM-DD');
+}
 
-};
+function isCommandline(userAgent: string): boolean {
+  return userAgent.search(/curl|wget/i) !== -1;
+}
+
 export {
-  hours,
-  minutes,
+  hourInSecs,
+  minuteInSecs,
   isCommandline,
   getCurrentTimestampInSeconds,
-  convertEpochToSeconds,
-  generateError
+  generateError,
+  getCurrentDate
 }

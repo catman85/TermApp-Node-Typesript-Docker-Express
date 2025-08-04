@@ -2,10 +2,12 @@ import * as util from './utils'
 
 export class CacheHandler {
   private static instance: CacheHandler;
-  private static cache: Map < string, Cache > = new Map();
+  private static cache: Map<string, Cache> = new Map();
 
-  // private static cacheRefreshRateSeconds: number = 1 * util.hours;
-  private static cacheRefreshRateSeconds: number = 30 * util.minutes;
+  private static cacheRefreshRateSeconds: number = 30 * util.minuteInSecs;
+
+  private constructor() {
+  } // Singleton Pattern
 
   public static getInstance(): CacheHandler {
     if (!CacheHandler.instance) {
@@ -13,7 +15,6 @@ export class CacheHandler {
     }
     return CacheHandler.instance;
   }
-  private constructor() {} // Singleton Pattern
 
   public addInCache(key: string, content: any): void {
     CacheHandler.cache.set(key, new Cache(content, util.getCurrentTimestampInSeconds()));
@@ -21,19 +22,17 @@ export class CacheHandler {
 
   public getContent(key: string): any {
     let res = CacheHandler.cache.get(key);
-    if (res) {
-      return res.data;
-    } else {
-      return undefined;
-    };
+    if (!res) return;
+    return res.data;
   }
 
   public isFresh(key: string): boolean {
-    let exists_cond1: boolean = this.exists(key);
-    if (!exists_cond1) {
-      return false;
-    }
-    let is_recent_cond2: boolean = CacheHandler.cache.get(key).last_update_epoch + CacheHandler.cacheRefreshRateSeconds > util.getCurrentTimestampInSeconds();
+    const entryExists = this.exists(key);
+    if (!entryExists) return;
+
+    const entryUpdateEpoch = CacheHandler.cache.get(key).last_update_epoch;
+    const currentEpoch = util.getCurrentTimestampInSeconds();
+    let is_recent_cond2: boolean = entryUpdateEpoch + CacheHandler.cacheRefreshRateSeconds > currentEpoch;
     if (!is_recent_cond2) {
       console.log('Cache entry found for given key, but it\'s old.')
       return false;
@@ -42,14 +41,13 @@ export class CacheHandler {
   }
 
   private exists(key: string): boolean {
-    let condition: boolean
-    condition = this.getContent(key) !== undefined;
-    if (condition) {
+    const exists = Boolean(this.getContent(key));
+    if (exists) {
       console.log("Cache Found for given key :)")
     } else {
       console.log('Cache entry not found for given key.')
     }
-    return condition
+    return exists;
   }
 
 }
