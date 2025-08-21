@@ -30,6 +30,14 @@ curl snf-878293.vm.okeanos.grnet.gr
 
 ## Develop locally
 
+1. modify the .env file and add your https://api-ninjas.com/api/covid19 api key
+```sh
+nano .env
+SERVER_PORT=8080
+HOST_PORT=1234
+NINJA_API_KEY=YOUR_KEY
+```
+
 ```sh
 npm ci
 npm run start:dev
@@ -37,15 +45,11 @@ npm run start:dev
 
 ## Develop with docker
 
-##### The following command triggers the Dockerfile in the current dir and only reaches the dev stage not the prod
-
 ```sh
 docker-compose up
 ```
 
-  
-
-##### Execution sequence:
+### Execution sequence:
 
 1. docker-compose up
 
