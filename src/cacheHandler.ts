@@ -1,4 +1,5 @@
 import * as util from './utils'
+import {CountryDailyStatistics} from "./types";
 
 export class CacheHandler {
   private static instance: CacheHandler;
@@ -16,24 +17,24 @@ export class CacheHandler {
     return CacheHandler.instance;
   }
 
-  public addInCache(key: string, content: any): void {
+  public addInCache(key: string, content: CountryDailyStatistics): void {
     CacheHandler.cache.set(key, new Cache(content, util.getCurrentTimestampInSeconds()));
   }
 
-  public getContent(key: string): any {
-    let res = CacheHandler.cache.get(key);
-    if (!res) return;
-    return res.data;
+  public getContent(key: string): CountryDailyStatistics {
+    const result = CacheHandler.cache.get(key);
+    if (!result) return;
+    return result.data;
   }
 
   public isFresh(key: string): boolean {
     const entryExists = this.exists(key);
     if (!entryExists) return;
 
-    const entryUpdateEpoch = CacheHandler.cache.get(key).last_update_epoch;
+    const entryUpdateEpoch = CacheHandler.cache.get(key).lastUpdateEpoch;
     const currentEpoch = util.getCurrentTimestampInSeconds();
-    let is_recent_cond2: boolean = entryUpdateEpoch + CacheHandler.cacheRefreshRateSeconds > currentEpoch;
-    if (!is_recent_cond2) {
+    const isRecent: boolean = entryUpdateEpoch + CacheHandler.cacheRefreshRateSeconds > currentEpoch;
+    if (!isRecent) {
       console.log('Cache entry found for given key, but it\'s old.')
       return false;
     }
@@ -53,11 +54,11 @@ export class CacheHandler {
 }
 
 class Cache {
-  data: any
-  last_update_epoch: number
+  data: CountryDailyStatistics
+  lastUpdateEpoch: number // timestamp unix epoch in seconds
 
-  constructor(data: any, last_update_epoch: number) {
+  constructor(data: CountryDailyStatistics, lastUpdateEpoch: number) {
     this.data = data
-    this.last_update_epoch = last_update_epoch;
+    this.lastUpdateEpoch = lastUpdateEpoch;
   }
 }

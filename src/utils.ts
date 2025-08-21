@@ -1,5 +1,11 @@
 import dayjs from "dayjs";
-import {AxiosConfig, CountryDailyStatistics, CountryStatsByDate, Covid19ApiRequestSelection} from "./types";
+import {
+  AxiosConfig,
+  AxiosResponse,
+  CountryDailyStatistics,
+  CountryStatsByDate,
+  Covid19ApiRequestSelection, Covid19ApiResponse
+} from "./types";
 
 const HOURS_IN_SECS = 3600;
 const MINUTES_IN_SECS = 60;
@@ -60,19 +66,24 @@ function getCountryByIpAxiosConfig(ipv6: string): AxiosConfig {
   }
 }
 
-function getLatestCountryStatistics(countryCases: CountryStatsByDate, dateToCheck: string): CountryDailyStatistics {
-  if (!countryCases) return {
+function getLatestCountryStatistics(res: AxiosResponse<Covid19ApiResponse>, dateToCheck: string, type: Covid19ApiRequestSelection): CountryDailyStatistics {
+  const countryStats: CountryStatsByDate = type === 'cases' ? res.data[0].cases : res.data[0].deaths
+  if (!countryStats) return {
     total: 0,
     new: 0
   }
 
-  const countrySpecificStatistics: CountryDailyStatistics = countryCases[dateToCheck];
-  if (!countrySpecificStatistics) return countryCases[LATEST_RECORD_DATE]
+  const countrySpecificStatistics: CountryDailyStatistics = countryStats[dateToCheck];
+  if (!countrySpecificStatistics) return countryStats[LATEST_RECORD_DATE]
   return countrySpecificStatistics
 }
 
 function formatNumber(num: number): string {
   return new Intl.NumberFormat().format(num)
+}
+
+function getCacheKey(country: string, dateToCheck: string, type: Covid19ApiRequestSelection): string {
+  return country + dateToCheck + type;
 }
 
 export {
@@ -82,5 +93,6 @@ export {
   getCurrentTimestampInSeconds,
   generateError,
   formatNumber,
+  getCacheKey,
   getCurrentDate, getCovidApiAxiosConfig, getCountryByIpAxiosConfig, getLatestCountryStatistics
 }

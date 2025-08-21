@@ -1,5 +1,11 @@
 import * as util from './utils';
-import {generateError, getCountryByIpAxiosConfig, getCovidApiAxiosConfig, getLatestCountryStatistics} from './utils';
+import {
+  generateError,
+  getCacheKey,
+  getCountryByIpAxiosConfig,
+  getCovidApiAxiosConfig,
+  getLatestCountryStatistics
+} from './utils';
 import {CacheHandler} from './cacheHandler';
 import {
   AxiosResponse,
@@ -14,8 +20,10 @@ const cacheHandler: CacheHandler = CacheHandler.getInstance();
 
 
 export const countryStatisticsPromise = async (country: string, dateToCheck: string, type: Covid19ApiRequestSelection): Promise<CountryDailyStatistics> => {
-  if (cacheHandler.isFresh(country)) {
-    return cacheHandler.getContent(country)
+  const cacheKey = getCacheKey(country, dateToCheck, type);
+
+  if (cacheHandler.isFresh(cacheKey)) {
+    return cacheHandler.getContent(cacheKey)
   }
 
   try {
@@ -23,11 +31,9 @@ export const countryStatisticsPromise = async (country: string, dateToCheck: str
     const res: AxiosResponse<Covid19ApiResponse> = await axios(axiosConfig)
     if (!res) generateError(500, 'fail');
 
-    const countryStats = type === 'cases' ? res.data[0].cases : res.data[0].deaths
-    const countrySpecificStatistics: CountryDailyStatistics = getLatestCountryStatistics(countryStats, dateToCheck);
+    const countrySpecificStatistics: CountryDailyStatistics = getLatestCountryStatistics(res, dateToCheck, type);
     if (!countrySpecificStatistics) generateError(500, 'country not found');
 
-    const cacheKey = country + dateToCheck + type
     cacheHandler.addInCache(cacheKey, countrySpecificStatistics)
     return countrySpecificStatistics;
   } catch (err) {
