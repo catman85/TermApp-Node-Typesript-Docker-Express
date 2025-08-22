@@ -1,0 +1,22 @@
+---
+services:
+ docker_term_app:
+  env_file: 
+    - .env
+  build: 
+   context: .
+   dockerfile: Dockerfile
+   target: dev
+#  ports:
+#    - "${HOST_PORT}:${SERVER_PORT}" 
+  container_name: covid_term_app
+  volumes:
+    - ./:/usr/src/app
+  command: 'npm run start:dev'
+  networks:
+   nginx-proxy-network:
+     ipv4_address: 172.23.0.8  # Fixed IP
+
+networks:
+  nginx-proxy-network:
+    external: true
