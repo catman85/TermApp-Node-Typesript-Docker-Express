@@ -9,7 +9,7 @@
 
 ```sh
 
-curl snf-878293.vm.okeanos.grnet.gr
+curl covid.mhtsaras.duckdns.org
 
 ```
 
@@ -71,4 +71,9 @@ docker-compose up
 ```sh
 docker build -t "docker-app"  .
 docker run -d -p 80:8080 --rm docker-app node build/boot.js
+```
+You can also use the ```server-compose.yml``` file to deploy this app in a self hosted server
+```sh
+# the server-compose.yml file already has the network settings ready to go
+docker compose -f server-compose.yml up -d
 ```
