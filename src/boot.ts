@@ -1,4 +1,4 @@
-import express from "express";
+import express, {Request, Response} from "express";
 import requestIp from "request-ip"
 import dotenv from 'dotenv';
 import {presentInTerm} from "./presenter"
@@ -17,22 +17,23 @@ app.listen(port, () => {
   console.log(`listening at http://localhost:${port}`)
 })
 
-app.get('*', async (req, res) => {
-  let presendedData: FinalResult;
+app.get('*', async (req: Request, res: Response) => {
+  let presentedData: FinalResult;
   try {
-    // Geolocating Visitor
-    const userAgent = req.headers['user-agent'];
-    const ip = req.clientIp;
-    presendedData = await boot(ip, userAgent);
+
+    presentedData = await boot(req);
   } catch (err) {
     console.error("Something went wrong" + err.toString());
-    presendedData = "500 INTERNAL SERVER ERROR. Please Try again Later.\n"
+    presentedData = "500 INTERNAL SERVER ERROR. Please Try again Later.\n"
   } finally {
-    res.send(presendedData)
+    res.send(presentedData)
   }
 })
 
-async function boot(ip: string, userAgent: string): Promise<FinalResult> {
+async function boot(request: Request): Promise<FinalResult> {
+  // Geolocating Visitor
+  const userAgent = request.headers['user-agent'];
+  const ip = request.clientIp;
   const isInTerm: boolean = isCommandline(userAgent);
   const countryName: string = await countryFromIpPromise(ip);
   const today = getCurrentDate();
